@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div style="max-width: 800px; margin: 30px auto;">
+        <h1>Топ 10 популярных цитат</h1>
+        <ul style="list-style-type: none; padding: 0;">
+            {% for quote in quotes %}
+                <li style="background: #f8f9fa; padding: 20px; margin-bottom: 15px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    <blockquote style="font-size: 20px; font-style: italic; margin: 0 0 10px 0;">
+                        "{{ quote.text }}"
+                    </blockquote>
+                    <p style="text-align: right; font-size: 16px; color: #555; margin: 0 0 5px 0;">— {{ quote.source }}</p>
+                    <p>
+                       👍 {{ quote.likes }} &nbsp;&nbsp; 👎 {{ quote.dislikes }} &nbsp;&nbsp; 👁️ {{ quote.shows }}
+                    </p>
+                </li>
+            {% empty %}
+                <li>Цитат пока нет.</li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}

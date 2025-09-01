@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Главная</title>
+</head>
+<body>
+<style>
+.wrapper .block a {
+    text-decoration: none;
+    margin-right: 15px;
+    color: inherit;
+}
+</style>
+<div class="wrapper">
+    <div class="block"><a href="/">Случайная цитата</a>  <a href="/edit">Добавить цитату</a>
+        <a href="/top">Топ цитат</a>
+    </div>
+    <div class="block">{% block content%}{% endblock content %}</div>
+</div>
+</body>
+</html>

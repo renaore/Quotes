@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="text-align: center; margin: 50px auto; max-width: 800px;">
+    <h1>Случайная цитата</h1>
+
+    {% if quote %}
+        <div style="background: #f8f9fa; padding: 30px; border-radius: 10px; margin: 30px 0; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+            <blockquote style="font-size: 24px; line-height: 1.6; color: #333; font-style: italic;">
+                "{{ quote.text }}"
+            </blockquote>
+            <p style="font-size: 18px; color: #666; margin-top: 20px; text-align: right;">
+               — {{ quote.source }}
+            </p>
+            <p>
+                👁️ {{ quote.shows }} &nbsp;&nbsp; 👍 <span id="like-count">{{ quote.likes }}</span>
+                &nbsp;&nbsp; 👎 <span id="dislike-count">{{ quote.dislikes }}</span>
+            </p>
+            <button id="like-button" style="background: #007bff; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; margin-top: 10px;">
+                ️👍 Нравится
+            </button>
+            <button id="dislike-button" style="background: #007bff; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; margin-top: 10px;">
+                ️👎 Не нравится
+            </button>
+        </div>
+        <script>
+function sendVote(action) {
+    fetch("{% url 'vote' quote.id %}", {
+        method: "POST",
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}',
+            'Accept': 'application/json',
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({action: action})
+    })
+    .then(response => response.json())
+    .then(data => {
+        if(data.status === 'success') {
+            if(action === "like") {
+                document.getElementById('like-count').textContent = data.likes;
+                document.getElementById('like-button').disabled = true;
+                document.getElementById('like-button').textContent = "👍 Лайк поставлен";
+                document.getElementById('dislike-button').disabled = true; // блокируем дизлайк
+            } else if(action === "dislike") {
+                document.getElementById('dislike-count').textContent = data.dislikes;
+                document.getElementById('dislike-button').disabled = true;
+                document.getElementById('dislike-button').textContent = "👎 Дизлайк поставлен";
+                document.getElementById('like-button').disabled = true; // блокируем лайк
+            }
+        }
+    })
+}
+
+document.getElementById('like-button').addEventListener('click', function() {
+    sendVote("like");
+});
+
+document.getElementById('dislike-button').addEventListener('click', function() {
+    sendVote("dislike");
+});
+        </script>
+    {% else %}
+        <div style="background: #f8f9fa; padding: 30px; border-radius: 10px; margin: 30px 0;">
+            <p style="font-size: 18px; color: #666;">
+                Цитат пока нет. Добавьте первую цитату!
+            </p>
+            <form action="{% url 'edit' %}" method="get">
+                <button type="submit" style="background: #28a745; color: white; border: none; padding: 12px 24px; border-radius: 5px; cursor: pointer; font-size: 16px;">
+                    Добавить цитату
+                </button>
+            </form>
+        </div>
+    {% endif %}
+    <div style="margin-top: 20px;">
+        <form action="" method="get">
+            <button type="submit" style="background: #6c757d; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">
+                🔄 Новая случайная цитата
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+

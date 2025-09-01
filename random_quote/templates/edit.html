@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>Добавить цитату</h2>
+    <style>
+        .myfield{
+            border:1px solid #ccc;
+            border-radius:5px;
+            height:40px;
+            width:300px;
+            font-size: 18px;
+            margin: 10px 10px 10px 0;
+            padding: 5px;
+        }
+        form > div > div {
+            margin-bottom: 15px;
+        }
+        input, select, textarea {
+            font-size: 18px;
+            height: 40px;
+            width: 300px;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        label {
+            white-space: nowrap;
+            font-size: 18px;
+            margin-right: 10px;
+            display: inline-block;
+            width: 100px;
+        }
+        .messages {
+            list-style-type: none;
+            padding: 0;
+            margin: 20px 0 20px 30px;
+        }
+        .messages li {
+            white-space: pre-line;
+            font-size: 18px;
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #f8f9fa;
+        }
+    </style>
+    <form method="POST">
+        {% csrf_token %}
+        <div>
+        {% for field in form %}
+        <div>
+            {{ field.label_tag }}
+            <div>{{ field }}</div>
+        </div>
+        {% endfor %}
+        </div>
+        <input type="submit" value="Сохранить" >
+    </form>
+    {% if messages %}
+      <ul class="messages">
+        {% for message in messages %}
+          <li class="{{ message.tags }}">{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+{% endblock %}
